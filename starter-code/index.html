@@ -10,6 +10,7 @@
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/cardsController.js"></script>
+        <script src="scripts/directives/cardDirective.js"></script>
     </head>
     <body>
       <div class="container">
@@ -23,15 +24,18 @@
           <div class="row">
 
             <div class="col-sm-6 col-md-6 col-lg-4" ng-repeat="card in cardsController.questionsList" >
-              <div class="card">
-                <h4 class="card-title">{{card.question}}</h4>
-                <h6>Cards Against Assembly</h6>
-              </div>
+              <wdi-card question="{{card.question}}"></wdi-card>
+            </div>
             </div>
 
-          </div>
+          
         </section>
-
+        <hr/>
+        <section class="col-sm-6 col-md-6 col-lg-4">
+        <wdi-card question="Why does Oprah cry into her lean cuisine?"></wdi-card>
+        </section>
+        </section>
+    </div>
       <footer>
         <p>Made with <span class="heart">♥︎</span> at General Assembly</p>
       </footer>
