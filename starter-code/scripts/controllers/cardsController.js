@@ -13,7 +13,7 @@ function CardsController($http){
 
   function getCards(){
   $http 
-    .get('https://shielded-forest-41789.herokuapp.com/api/flashcards')
+    .get('http://localhost:3000/cards')
     .then(function(response){
       console.log(response.data);
       console.log("yo");
