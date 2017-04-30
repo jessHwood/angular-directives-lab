@@ -1,119 +1,57 @@
 /*jshint esversion: 6 */
 
-'use strict'
-
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
 
 
-const questionsList = [
-		    {
-		id: "578414ae4dda540700250522",
-		question: "What is Superman's guilty pleasure?",
-		answer: "Ben Affleck",
-		answerHidden: true
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+var port = process.env.PORT || 3000;
 
-		},
-		{
-		id: "578414ae4dda540700250523",
-		question: "I'm sorry I couldn't finish my homework...",
-		answer: "the dog ate my laptop!",
-		answerHidden: true
+var db = require('./models');
 
-		},
-		{
-		id: "578414ae4dda540700250524",
-		question: "I get by with a little help from _________.",
-		answer: "John Cena!",
-		answerHidden: true
-
-		},
-		{
-		id: "578414ae4dda540700250525",
-		question: "_________ -- It's a trap!",
-		answer: "JAVASCRIPT???",
-		answerHidden: true
-
-		},
-		{
-		id: "578414ae4dda540700250526",
-		question: "The class field trip was completely ruined by _________.",
-		answer: "the guy in a clown suit",
-		answerHidden: true
-
-		},
-		{
-		id: "578414ae4dda540700250527",
-		question: "What's my secret power?",
-		answer: "ngAnimate",
-		answerHidden: true
-
-		},
-		{
-		id: "578414ae4dda540700250528",
-		question: "Why are there so many songs about rainbows?",
-		answer: "Leprachauns",
-		answerHidden: true
-
-		},
-		{
-		id: "578414ae4dda540700250529",
-		question: "Where do babies come from?",
-		answer: "Netflix and Chill",
-		answerHidden: true
-		},
-		{
-		id: "578414ae4dda54070025052a",
-		question: "How do we do auth in Angular with Satellizer?",
-		answer: "I'm glad you asked.",
-		answerHidden: true
-		},
-		{
-		id: "57f7e8226ac3a7030096e014",
-		question: "What's the worst thing about a SQL database?",
-		answer: "It's hard to relate",
-		answerHidden: true
-		},
-		{
-		id: "57fc541bd5c33903005a8cad",
-		question: "Why did the chicken cross the playground?",
-		answer: "To get to the other slide",
-		answerHidden: true
-		},
-		{
-		id: "58b0476dee64fc0004ef09b2",
-		question: "abc",
-		answer: "def",
-		answerHidden: true
-		}
-  ];
+app.use(bodyParser.urlencoded({extended: true}));
 
 //get all cards
 app.get('/cards', function(req, res){
-	res.send(questionsList);
+	db.Card.find(function (err, data) {
+		if (err) res.json (err);
+		res.json(data);
+	});
 });
 
 //get one card
-app.get('/:id', function(req, res){
-	var question = questionsList.filter(function(el){return el["id"] == req.params.id})[0];
-	res.send(question);
+app.get('/cards/:id', function(req, res){
+	db.Card.findOne({_id: req.params.id}, function(err, data){
+		console.log(req.params.id);
+		res.json(data);
+	}); 
 });
 
+
 //post a new card
-app.post(function(req,res){
-	questionsList.push(req.body)
-	res.send(req.body);
+app.post('/cards', function(req,res){
+	console.log('in POST');
+	console.log('body:', req.body);
+
+	var card = new db.Card(req.body);
+
+	card.save(function(error){
+		if(error) res.json({message: 'couldnt create card bc' + error});
+
+		res.json({card: card});
+	});
 });
 
 //delete a card
-app.delete('/:id', function(req, res){
-	for(var i in questionsList){
-		if(questionsList[i]["id"] == req.params.id){
-			delete questionsList[i];
-		}
-		res.send({message: 'deleted'});
-	}
+app.delete('/cards/:id', function(req, res){
+	var id = req.params.id;
+
+	db.Card.remove({_id: id}, function(error){
+		if(error) res.json({message: 'could not delete card bc:' + error});
+
+		res.json({message: 'card successfully deleted'});
+	}).select('-_v');
+
 });
 
 //start server

@@ -1,4 +1,4 @@
-console.log('is this working?');
+console.log('controller working?');
 
 angular.module('CardsAgainstAssembly')
   .controller('CardsController', CardsController);
