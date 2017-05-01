@@ -1,6 +1,6 @@
 console.log('controller working?');
 
-angular.module('CardsAgainstAssembly')
+angular.module('CardsAgainstAssembly', [])
   .controller('CardsController', CardsController);
 
   //CONTROLLERS
@@ -11,16 +11,17 @@ function CardsController($http){
   self.all = [];
   self.getCards = getCards;
 
+  getCards();
+
   function getCards(){
   $http 
     .get('http://localhost:3000/cards')
     .then(function(response){
       console.log(response.data);
-      console.log("yo");
+
       self.all = (response.data);
+      console.log(self.all);
     });   
 }
-  getCards();
-
-
+ 
 }
