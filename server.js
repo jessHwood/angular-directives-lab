@@ -45,17 +45,19 @@ app.get('/cards/:id', function(req, res){
 
 //post a new card
 app.post('/cards', function(req,res){
-	console.log('in POST');
-	console.log('body:', req.body);
+	// console.log('in POST');
+	// console.log('body:', req.body.question);
 
-	var card = new Card(req.body);
+	var newCard = new db.Card({
+		question: req.body.question,
+		answer: req.body.answer
+	});
 
-		console.log(card);
 
-	card.save(function(error){
+	newCard.save(function(error, card){
 		if(error) res.json({message: 'couldnt create card bc' + error});
 
-		res.json({card: card});
+		res.json(card);
 	});
 });
 

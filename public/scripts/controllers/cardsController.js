@@ -26,10 +26,11 @@ function CardsController($http){
 }
 
   function addCard(){
+    console.log(this.newCard);
+    self.all.push(this.newCard);
     $http
-    .post('/cards', self.newCard)
+    .post('/cards', this.newCard)
     .then(function(response){
-      console.log(self.newCard);
       getCards();
     });
     self.newCard = {};
