@@ -10,18 +10,29 @@ function CardsController($http){
   var self = this;
   self.all = [];
   self.getCards = getCards;
+  self.addCard = addCard;
 
   getCards();
 
   function getCards(){
   $http 
-    .get('http://localhost:3000/cards')
+    .get('/cards')
     .then(function(response){
       console.log(response.data);
 
       self.all = (response.data);
-      console.log(self.all);
+      // console.log(self.all);
     });   
 }
+
+  function addCard(){
+    $http
+    .post('/cards', self.newCard)
+    .then(function(response){
+      console.log(self.newCard);
+      getCards();
+    });
+    self.newCard = {};
+  }
  
 }

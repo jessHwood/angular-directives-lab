@@ -9,6 +9,9 @@ var port = process.env.PORT || 3000;
 var db = require('./models');
 var Card = require('./models/cards');
 
+// serve static files in public
+app.use(express.static('public'));
+
 app.use(bodyParser.urlencoded({extended: true}));
 
 var allowCrossDomain = function(req, res, next) {
@@ -17,6 +20,11 @@ var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
 };
+
+//API endpoints
+app.get('/', function(req, res){
+	res.sendFile(__dirname + "/public/index.html");
+});
 
 //get all cards
 app.get('/cards', function(req, res){
