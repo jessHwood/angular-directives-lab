@@ -26,11 +26,13 @@ function CardsController($http){
 }
 
   function addCard(){
+    console.log("posting");
     console.log(this.newCard);
     self.all.push(this.newCard);
     $http
     .post('/cards', this.newCard)
     .then(function(response){
+      console.log(response);
       getCards();
     });
     self.newCard = {};

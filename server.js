@@ -5,26 +5,21 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override'); //used to manipulate POST
 var app = express();
 var port = process.env.PORT || 3000;
-
-var db = require('./models');
-var Card = require('./models/cards');
+// var Card = require('./models/cards');
 
 // serve static files in public
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-};
 
 //API endpoints
 app.get('/', function(req, res){
 	res.sendFile(__dirname + "/public/index.html");
 });
+
+var db = require('./models');
 
 //get all cards
 app.get('/cards', function(req, res){
@@ -46,17 +41,15 @@ app.get('/cards/:id', function(req, res){
 //post a new card
 app.post('/cards', function(req,res){
 	// console.log('in POST');
-	// console.log('body:', req.body.question);
+	console.log('body: ', req.body);
 
 	var newCard = new db.Card({
-		question: req.body.question,
-		answer: req.body.answer
+		question: req.body.question
 	});
 
-
-	newCard.save(function(error, card){
-		if(error) res.json({message: 'couldnt create card bc' + error});
-
+		console.log(newCard);
+	newCard.save(function(err, card){
+		console.log(card);
 		res.json(card);
 	});
 });
@@ -64,7 +57,7 @@ app.post('/cards', function(req,res){
 //update a card
 app.put('/cards/:id', function(req, res){
 	
-	db.Card.findOne({_id: req.params.id}), function(error, card) {
+	db.Card.findOne({_id: req.params.id}, function(error, card) {
 		if(error) res.json({message: 'could not find card bc:' + error});
 
 		if(req.body.question) card.question = req.body.question;
@@ -76,7 +69,7 @@ app.put('/cards/:id', function(req, res){
 		if(error) res.json({message: 'could not update card bc:' + error});
 		res.json({message: 'card successfully updated', card: card});
 	});
-	};
+	});
 });
 
 //delete a card
